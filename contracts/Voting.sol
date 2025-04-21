@@ -29,7 +29,7 @@ contract Voting is Ownable {
     }
 
     function vote(string memory _name) public {
-        require(voted[msg.sender] != false, "voted already!");
+        require(!voted[msg.sender] || voted[msg.sender] != false, "voted already!");
 
         for(uint i=0; i < candidates.length; i++) {
             if(keccak256(abi.encodePacked(candidates[i].name)) == keccak256(abi.encodePacked(_name))) {
@@ -41,6 +41,12 @@ contract Voting is Ownable {
 
     function getCandidates() public view returns(Candidate[] memory) {
         return candidates;
+    }
+
+    // this is for testing purpose only not for production, comment it out while deploying
+    // as this lets user mark their vote to be false which in is not good
+    function removePersonVote() public {
+        voted[msg.sender] = false;
     }
 
 }
